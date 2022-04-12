@@ -1,0 +1,11 @@
+{
+    "Tab1": {
+        "Titre1": {
+            "Data1": {
+                "type": "string",
+                "value": "Value1"
+            },
+            "Data2": "Value2"
+        }
+    }
+}

@@ -1,0 +1,107 @@
+//// -- LEVEL 1
+//// -- Tables and References
+
+// Creating tables
+Table users {
+  id int [pk, increment] // auto-increment
+  username varchar [uk]
+  email varchar [uk]
+  created_at timestamp
+  country_code int
+}
+
+Table projects {
+  id int [pk, increment]
+  name varchar [uk]
+  description varchar
+  image int [ref: > assets.id]
+}
+
+Table projects_users{
+  id int [pk, increment]
+  project_id int [ref: > projects.id]
+  user_id int [ref: > users.id]
+}
+
+Table assets {
+  id int [pk, increment]
+  originalname varchar [uk]
+  path varchar
+  encoding varchar
+  mimetype varchar
+  size int
+}
+
+Table class {
+  id int [pk, increment]
+  name varchar [uk]
+}
+
+Table technical_class {
+  id int [pk, increment]
+  name varchar [uk]
+  class_id int [ref: > class.id]
+  template_id int [ref: > assets.id]
+}
+
+Table systems {
+  id int [pk, increment]
+  tag varchar [uk]
+  scheduling_tag varchar
+  technical_class_id [ref: > technical_class.id]
+  description varchar
+  cof varchar
+  inspection_strategie varchar
+  process_function varchar
+  corrosion_loop varchar
+  navisworks_status varchar
+  overview_status varchar
+  due_date date
+  overview_id int [ref: > assets.id]
+}
+
+Table systems_documents {
+  id int [pk, increment]
+  document_id int [ref: > assets.id]
+  system_id int [ref: > systems.id]
+}
+
+Table items {
+  id int [pk, increment]
+  tag varchar [uk]
+  description varchar
+  manufacturer varchar
+  serial_number varchar
+  design_code varchar
+  operating_pressure double
+  operating_temperature double
+  design_pressure double
+  design_temperature double
+  fluid varchar
+  phase varchar
+  material varchar
+  ca double
+  external_coating varchar
+  internal_coating varchar
+  insulation varchar
+  fireproofing bool
+  cathodic_protection varchar
+  system_id varchar [ref: > systems.id]
+  drawing_id int [ref: > assets.id]
+}
+
+Table items_documents {
+  id int [pk, increment]
+  document_id int [ref: > assets.id]
+  system_id int [ref: > systems.id]
+  default bool
+}
+
+Table comments {
+  id int [pk, increment]
+  comment varchar
+  cleared_date date
+  cleared_by_id int [ref: > users.id]
+  isometric_id int [ref: > isometrics.id]
+}
+

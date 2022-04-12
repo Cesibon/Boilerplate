@@ -1,0 +1,20 @@
+input[type=password]::-ms-reveal,
+input[type=password]::-ms-clear
+{
+    display: none;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    transition-property: all;
+    transition-delay: 2000000s;
+    /* color: inherit !important */
+}
+
+/* 
+.ag-theme-alpine .ag-row-odd{
+    background-color: #fff!important
+} */

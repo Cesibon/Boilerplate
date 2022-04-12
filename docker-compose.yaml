@@ -1,0 +1,84 @@
+
+version: "3.7"
+services:
+
+  # DB
+  database:
+    image: postgres:13.1
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./database/scripts:/docker-entrypoint-initdb.d
+      - ./database/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      APP_SECRET: ${APP_SECRET}
+
+      # DATABSE
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # APP
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    volumes:
+      - "./server/src:/app/src"
+    command: ["npm", "run", "dev"]
+    expose:
+      - "5000"
+    depends_on:
+      - database
+  
+
+  # frontend service (custom image)
+  frontend:
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    environment:
+      REACT_APP_TITLE: Alis
+      REACT_APP_API_ENDPOINT: ${SERVER_URL}/
+    volumes:
+      - certbot:/etc/letsencrypt
+      - certbot:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - certbot:/etc/letsencrypt
+      - certbot:/var/www/certbot
+
+volumes:
+  certbot: 
+    external: true
+networks: 
+  backend:

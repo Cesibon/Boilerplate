@@ -1,0 +1,16 @@
+# Specify a base image
+FROM node:14 AS alpine
+
+WORKDIR /app
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+# check every 30s to ensure this service returns HTTP 200
+HEALTHCHECK --interval=30s \
+  CMD node ./healthcheck.js
+
+# Default command
+CMD ["npm", "run", "dev"]

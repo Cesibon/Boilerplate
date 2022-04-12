@@ -1,0 +1,13 @@
+node_modules
+**/uploads/**/*
+
+docs
+.todo
+
+.git
+.gitignore
+
+.dockerignore
+dockerfile
+dockerfile.dev
+README.md

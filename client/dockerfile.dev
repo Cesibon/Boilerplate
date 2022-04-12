@@ -1,0 +1,11 @@
+FROM node:14-alpine AS alpine
+
+WORKDIR /app
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+# Run 'npm start' when the container starts.
+CMD ["npm", "run", "start"]
